@@ -42,9 +42,13 @@ const TimeDisplay = ({
     <div className="time-display-container">
       <div className="deadline-display">
         <h2>
-          Task Deadline: <span className="time">{formatTime(deadline)}</span>
+          {taskName} <span className="time">{formatTime(deadline)}</span>
         </h2>
-        {taskName && <div className="task-name">{taskName}</div>}
+      </div>
+      <div className="deadline-display">
+        <h2>
+          Start preparing <span className="time">{formatTime(startTime)}</span>
+        </h2>
       </div>
 
       <div className="time-breakdown">
@@ -99,14 +103,6 @@ const TimeDisplay = ({
               </div>
               <div className="timeline-end">{formatTime(deadline)}</div>
             </div>
-
-            {/* Start time callout */}
-            {startTime && (
-              <div className="start-time-callout">
-                <span className="label">Start preparing at:</span>
-                <span className="time">{formatTime(startTime)}</span>
-              </div>
-            )}
           </div>
         )}
       </div>

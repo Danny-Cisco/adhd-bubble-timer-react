@@ -3,7 +3,6 @@
 /* Container for all bubbles */
 .bubbles-container {
   width: auto;
-  height: 300px;
   border-radius: 15px;
   background-color: black;
   display: flex;
@@ -12,9 +11,9 @@
   flex-wrap: wrap;
   gap: 20px;
   padding: 20px;
+  padding-bottom: 100px;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
   transition: background-color 0.5s ease;
-  overflow: hidden;
   position: relative;
 }
 
@@ -24,8 +23,8 @@
 
 /* CSS Bubble styles */
 .bubble {
-  width: 80px;
-  height: 80px;
+  width: 160px;
+  height: 160px;
   position: relative;
   animation: float 4s ease-in-out infinite;
   transform-origin: center;
@@ -38,9 +37,13 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #a8d8ff, #8fb8de);
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.3)
+  );
   position: relative;
-  box-shadow: 0 0 20px rgba(173, 216, 255, 0.7),
+  box-shadow: 0 0 20px rgba(173, 216, 255, 0.2),
     inset 0 0 20px rgba(255, 255, 255, 0.5);
   overflow: hidden;
   display: flex;
@@ -53,7 +56,6 @@
   position: absolute;
   width: 30%;
   height: 30%;
-  background-color: rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   top: 20%;
   left: 20%;

@@ -108,22 +108,6 @@ const TimerDisplayStep = ({
 
   return (
     <div className="step timer-display-step">
-      <h2>Time Remaining</h2>
-
-      <div className="time-info">
-        <p>
-          <strong>Task:</strong> <span>{taskData.taskName}</span>
-        </p>
-        <p>
-          <strong>Due:</strong>
-          <span>{formatDateSimple(taskData.taskDateTime)}</span>
-        </p>
-        <p>
-          <strong>Start Preparing:</strong>
-          <span>{localEndTime ? formatDateSimple(localEndTime) : "--"}</span>
-        </p>
-      </div>
-
       <div className="time-display">{timeDisplay}</div>
 
       {/* Three.js Bubble Visualization */}

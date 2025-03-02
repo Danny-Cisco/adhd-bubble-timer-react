@@ -214,7 +214,7 @@ function App() {
   return (
     <div className="app-container">
       <div className="container">
-        <h1>ADHD Time Bubbles</h1>
+        <h1>Time Bubbles</h1>
 
         {showTimeDisplay && (
           <TimeDisplay
@@ -237,8 +237,6 @@ function App() {
             taskName={taskData.taskName}
           />
         )}
-
-        <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
 
         {renderStep()}
       </div>
