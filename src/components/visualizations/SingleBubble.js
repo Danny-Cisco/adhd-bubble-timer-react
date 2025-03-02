@@ -1,7 +1,12 @@
 import React from "react";
 import "./ThreeBubbles.css";
 
-const SingleBubble = ({ number, isPopped = false, isTimeUp = false }) => {
+const SingleBubble = ({
+  number,
+  label,
+  isPopped = false,
+  isTimeUp = false,
+}) => {
   return (
     <div
       className={`bubble ${isPopped ? "popped" : ""} ${
@@ -10,7 +15,7 @@ const SingleBubble = ({ number, isPopped = false, isTimeUp = false }) => {
     >
       <div className="bubble-inner">
         <div className="bubble-reflection"></div>
-        <span className="bubble-number">{number}</span>
+        <span className="bubble-number">{label}</span>
       </div>
     </div>
   );

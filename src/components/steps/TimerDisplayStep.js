@@ -106,6 +106,8 @@ const TimerDisplayStep = ({ taskData, onReset, showNotification }) => {
         totalBubbles={totalBubbles}
         bubblesPopped={bubblesPopped}
         isTimeUp={isTimeUp}
+        startTime={startTime}
+        endTime={endTime}
       />
 
       <button onClick={onReset} className="reset-button">
