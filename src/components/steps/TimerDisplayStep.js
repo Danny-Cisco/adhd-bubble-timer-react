@@ -3,32 +3,48 @@ import ThreeBubbles from "../visualizations/ThreeBubbles";
 import { formatDateSimple } from "../../utils/dateHelpers";
 import "./TimerDisplayStep.css";
 
-const TimerDisplayStep = ({ taskData, onReset, showNotification }) => {
+const TimerDisplayStep = ({
+  taskData,
+  onReset,
+  showNotification,
+  startTime,
+  endTime,
+}) => {
   // State
   const [timeDisplay, setTimeDisplay] = useState("00:00:00");
   const [totalBubbles, setTotalBubbles] = useState(0);
   const [bubblesPopped, setBubblesPopped] = useState(0);
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
   const [isTimeUp, setIsTimeUp] = useState(false);
+  const [localStartTime, setLocalStartTime] = useState(startTime || new Date());
+  const [localEndTime, setLocalEndTime] = useState(endTime || null);
 
   // Setup timer and calculations on component mount
   useEffect(() => {
-    // Calculate when to start getting ready
-    const totalLeadTime =
-      taskData.prepTime +
-      taskData.travelTime +
-      taskData.earlyTime +
-      taskData.bufferTime;
+    // Set the local times from props if available
+    if (startTime) setLocalStartTime(startTime);
+    if (endTime) setLocalEndTime(endTime);
 
-    const start = new Date();
-    const end = new Date(taskData.taskDateTime.getTime() - totalLeadTime);
+    // If endTime is not provided, calculate it
+    if (!endTime && taskData.taskDateTime) {
+      // Calculate when to start getting ready
+      const totalLeadTime =
+        taskData.prepTime +
+        taskData.travelTime +
+        taskData.earlyTime +
+        taskData.bufferTime;
 
-    setStartTime(start);
-    setEndTime(end);
+      const start = new Date();
+      const end = new Date(taskData.taskDateTime.getTime() - totalLeadTime);
+
+      setLocalStartTime(start);
+      setLocalEndTime(end);
+    }
+
+    // Only proceed if we have both start and end times
+    if (!localStartTime || !localEndTime) return;
 
     // Calculate number of 30-minute bubbles
-    const timeRemaining = end.getTime() - start.getTime();
+    const timeRemaining = localEndTime.getTime() - localStartTime.getTime();
     const thirtyMinInMs = 30 * 60 * 1000;
     const bubbles = Math.max(1, Math.ceil(timeRemaining / thirtyMinInMs));
 
@@ -37,7 +53,7 @@ const TimerDisplayStep = ({ taskData, onReset, showNotification }) => {
     // Start the timer
     const timerInterval = setInterval(() => {
       const now = new Date();
-      const timeLeft = end.getTime() - now.getTime();
+      const timeLeft = localEndTime.getTime() - now.getTime();
 
       if (timeLeft <= 0) {
         clearInterval(timerInterval);
@@ -79,7 +95,16 @@ const TimerDisplayStep = ({ taskData, onReset, showNotification }) => {
       clearInterval(timerInterval);
       document.body.style.backgroundColor = "#f0f8ff";
     };
-  }, [taskData, showNotification]);
+  }, [
+    taskData,
+    showNotification,
+    totalBubbles,
+    bubblesPopped,
+    startTime,
+    endTime,
+    localStartTime,
+    localEndTime,
+  ]);
 
   return (
     <div className="step timer-display-step">
@@ -95,7 +120,7 @@ const TimerDisplayStep = ({ taskData, onReset, showNotification }) => {
         </p>
         <p>
           <strong>Start Preparing:</strong>
-          <span>{endTime ? formatDateSimple(endTime) : "--"}</span>
+          <span>{localEndTime ? formatDateSimple(localEndTime) : "--"}</span>
         </p>
       </div>
 
@@ -106,8 +131,8 @@ const TimerDisplayStep = ({ taskData, onReset, showNotification }) => {
         totalBubbles={totalBubbles}
         bubblesPopped={bubblesPopped}
         isTimeUp={isTimeUp}
-        startTime={startTime}
-        endTime={endTime}
+        startTime={localStartTime}
+        endTime={localEndTime}
       />
 
       <button onClick={onReset} className="reset-button">

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import ProgressBar from "./components/layout/ProgressBar";
 import NotificationSystem from "./components/layout/NotificationSystem";
+import TimeDisplay from "./components/layout/TimeDisplay";
 import WelcomeStep from "./components/steps/WelcomeStep";
 import TaskInputStep from "./components/steps/TaskInputStep";
 import DateTimeStep from "./components/steps/DateTimeStep";
@@ -27,6 +28,14 @@ function App() {
     bufferTime: 15 * 60 * 1000, // Default 15 minutes in ms
   });
 
+  // Track which time components have been confirmed/added
+  const [confirmedTimeComponents, setConfirmedTimeComponents] = useState({
+    prepTime: false,
+    travelTime: false,
+    earlyTime: false,
+    bufferTime: false,
+  });
+
   // Helper functions
   const goToNextStep = () => {
     setCurrentStep((prev) => Math.min(prev + 1, TOTAL_STEPS));
@@ -46,10 +55,24 @@ function App() {
       earlyTime: 10 * 60 * 1000,
       bufferTime: 15 * 60 * 1000,
     });
+    setConfirmedTimeComponents({
+      prepTime: false,
+      travelTime: false,
+      earlyTime: false,
+      bufferTime: false,
+    });
   };
 
   const updateTaskData = (newData) => {
     setTaskData((prev) => ({ ...prev, ...newData }));
+  };
+
+  // Function to mark a time component as confirmed
+  const confirmTimeComponent = (componentName) => {
+    setConfirmedTimeComponents((prev) => ({
+      ...prev,
+      [componentName]: true,
+    }));
   };
 
   const showNotification = (message) => {
@@ -62,6 +85,31 @@ function App() {
         prev.filter((notification) => notification.id !== id)
       );
     }, 5000);
+  };
+
+  // Calculate start time based on confirmed components
+  const calculateStartTime = () => {
+    if (!taskData.taskDateTime) return null;
+
+    let totalTimeToSubtract = 0;
+
+    if (confirmedTimeComponents.prepTime) {
+      totalTimeToSubtract += taskData.prepTime;
+    }
+
+    if (confirmedTimeComponents.travelTime) {
+      totalTimeToSubtract += taskData.travelTime;
+    }
+
+    if (confirmedTimeComponents.earlyTime) {
+      totalTimeToSubtract += taskData.earlyTime;
+    }
+
+    if (confirmedTimeComponents.bufferTime) {
+      totalTimeToSubtract += taskData.bufferTime;
+    }
+
+    return new Date(taskData.taskDateTime.getTime() - totalTimeToSubtract);
   };
 
   // Render current step
@@ -93,6 +141,7 @@ function App() {
             onNext={(needsPrep) => {
               if (!needsPrep) {
                 updateTaskData({ prepTime: 0 });
+                confirmTimeComponent("prepTime");
                 goToStep(6); // Skip prep time step
               } else {
                 goToNextStep();
@@ -104,7 +153,10 @@ function App() {
         return (
           <PrepTimeStep
             prepTime={taskData.prepTime}
-            onNext={goToNextStep}
+            onNext={() => {
+              confirmTimeComponent("prepTime");
+              goToNextStep();
+            }}
             updateTaskData={updateTaskData}
           />
         );
@@ -112,7 +164,10 @@ function App() {
         return (
           <TravelTimeStep
             travelTime={taskData.travelTime}
-            onNext={goToNextStep}
+            onNext={() => {
+              confirmTimeComponent("travelTime");
+              goToNextStep();
+            }}
             updateTaskData={updateTaskData}
           />
         );
@@ -120,7 +175,10 @@ function App() {
         return (
           <EarlyArrivalStep
             earlyTime={taskData.earlyTime}
-            onNext={goToNextStep}
+            onNext={() => {
+              confirmTimeComponent("earlyTime");
+              goToNextStep();
+            }}
             updateTaskData={updateTaskData}
           />
         );
@@ -128,7 +186,10 @@ function App() {
         return (
           <BufferTimeStep
             bufferTime={taskData.bufferTime}
-            onNext={goToNextStep}
+            onNext={() => {
+              confirmTimeComponent("bufferTime");
+              goToNextStep();
+            }}
             updateTaskData={updateTaskData}
           />
         );
@@ -138,6 +199,8 @@ function App() {
             taskData={taskData}
             onReset={resetApp}
             showNotification={showNotification}
+            startTime={new Date()}
+            endTime={calculateStartTime()}
           />
         );
       default:
@@ -145,10 +208,35 @@ function App() {
     }
   };
 
+  // Show TimeDisplay only after step 3 (when we have a deadline)
+  const showTimeDisplay = currentStep > 3 && taskData.taskDateTime;
+
   return (
     <div className="app-container">
       <div className="container">
         <h1>ADHD Time Bubbles</h1>
+
+        {showTimeDisplay && (
+          <TimeDisplay
+            deadline={taskData.taskDateTime}
+            startTime={calculateStartTime()}
+            confirmedComponents={{
+              prepTime: confirmedTimeComponents.prepTime
+                ? taskData.prepTime
+                : 0,
+              travelTime: confirmedTimeComponents.travelTime
+                ? taskData.travelTime
+                : 0,
+              earlyTime: confirmedTimeComponents.earlyTime
+                ? taskData.earlyTime
+                : 0,
+              bufferTime: confirmedTimeComponents.bufferTime
+                ? taskData.bufferTime
+                : 0,
+            }}
+            taskName={taskData.taskName}
+          />
+        )}
 
         <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
 
