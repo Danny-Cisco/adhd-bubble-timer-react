@@ -1,0 +1,20 @@
+.timer-display-step .time-display {
+  font-size: 48px;
+  font-weight: bold;
+  text-align: center;
+  color: #4a6fa5;
+  margin: 30px 0;
+}
+
+.timer-display-step.time-up .time-display {
+  color: #ff6b6b;
+}
+
+.timer-display-step .reset-button {
+  background-color: #ff6b6b;
+  margin-top: 40px;
+}
+
+.timer-display-step .reset-button:hover {
+  background-color: #e05a5a;
+}
