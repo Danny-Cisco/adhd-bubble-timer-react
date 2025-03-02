@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/adhd-time-bubbles-react/static/css/main.b6a85c75.css",
-    "main.js": "/adhd-time-bubbles-react/static/js/main.7fd7d74e.js",
-    "static/js/453.7e32f625.chunk.js": "/adhd-time-bubbles-react/static/js/453.7e32f625.chunk.js",
-    "index.html": "/adhd-time-bubbles-react/index.html",
-    "main.b6a85c75.css.map": "/adhd-time-bubbles-react/static/css/main.b6a85c75.css.map",
-    "main.7fd7d74e.js.map": "/adhd-time-bubbles-react/static/js/main.7fd7d74e.js.map",
-    "453.7e32f625.chunk.js.map": "/adhd-time-bubbles-react/static/js/453.7e32f625.chunk.js.map"
+    "main.css": "./static/css/main.b6a85c75.css",
+    "main.js": "./static/js/main.67f9280a.js",
+    "static/js/453.7e32f625.chunk.js": "./static/js/453.7e32f625.chunk.js",
+    "index.html": "./index.html",
+    "main.b6a85c75.css.map": "./static/css/main.b6a85c75.css.map",
+    "main.67f9280a.js.map": "./static/js/main.67f9280a.js.map",
+    "453.7e32f625.chunk.js.map": "./static/js/453.7e32f625.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b6a85c75.css",
-    "static/js/main.7fd7d74e.js"
+    "static/js/main.67f9280a.js"
   ]
 }
