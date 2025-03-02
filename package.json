@@ -29,7 +29,7 @@
       "react-app/jest"
     ]
   },
-  "homepage": "https://danny-cisco.github.io/adhd-bubble-timer-react/",
+  "homepage": "https://danny-cisco.github.io/adhd-bubble-timer-react",
   "browserslist": {
     "production": [
       ">0.2%",
